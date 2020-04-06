@@ -1,6 +1,7 @@
 module Jets::Commands
   class New < Sequence
     VALID_MODES = %w[html api job]
+    VALID_RUNTIMES = %w[2.5 2.7]
     argument :project_folder
 
     # Ugly, but when the class_option is only defined in the Thor::Group class
@@ -13,6 +14,7 @@ module Jets::Commands
         [:force, type: :boolean, desc: "Bypass overwrite are you sure prompt for existing files."],
         [:git, type: :boolean, default: true, desc: "Git initialize the project"],
         [:mode, default: 'html', desc: "mode: #{VALID_MODES.join(',')}"],
+        [:runtime, default: '2.7', desc: "runtime: #{VALID_RUNTIMES.join(',')}"],
         [:repo, desc: "GitHub repo to use. Format: user/repo"],
         [:webpacker, type: :boolean, default: true, desc: "Install webpacker"],
       ]
@@ -43,6 +45,10 @@ module Jets::Commands
         @webpacker = false
       else
         puts "Invalid mode provided: #{@options[:mode].color(:red)}. Please pass in an valid mode: #{VALID_MODES.join(',').color(:green)}."
+        exit 1
+      end
+      unless VALID_RUNTIMES.include? options[:runtime]
+        puts "Invalid runtime provided: #{@options[:runtime].color(:red)}. Please pass in an valid runtme: #{VALID_RUNTIMES.join(',').color(:green)}."
         exit 1
       end
     end
