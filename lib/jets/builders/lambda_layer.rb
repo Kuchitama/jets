@@ -11,19 +11,19 @@ module Jets::Builders
     end
 
     # Also restructure the folder from:
-    #   vendor/gems/ruby/2.5.0
+    #   vendor/gems/ruby/2.7.0
     # To:
-    #   ruby/gems/2.5.0
+    #   ruby/gems/2.7.0
     #
     # For Lambda Layer structure
     def consolidate_gems_to_opt
-      src = "#{stage_area}/code/vendor/gems/ruby/2.5.0"
-      dest = "#{stage_area}/opt/ruby/gems/2.5.0"
+      src = "#{stage_area}/code/vendor/gems/ruby/2.7.0"
+      dest = "#{stage_area}/opt/ruby/gems/2.7.0"
       rsync_and_link(src, dest)
 
       return unless Jets.rack?
 
-      src = "#{stage_area}/rack/vendor/gems/ruby/2.5.0"
+      src = "#{stage_area}/rack/vendor/gems/ruby/2.7.0"
       rsync_and_link(src, dest)
     end
 
@@ -40,16 +40,16 @@ module Jets::Builders
     end
 
     # replace_compiled_gems:
-    #   remove binary gems in vendor/gems/ruby/2.5.0
-    #   extract binary gems in opt/ruby/gems/2.5.0
-    #   move binary gems from opt/ruby/gems/2.5.0 to vendor/gems/ruby/2.5.0
+    #   remove binary gems in vendor/gems/ruby/2.7.0
+    #   extract binary gems in opt/ruby/gems/2.7.0
+    #   move binary gems from opt/ruby/gems/2.7.0 to vendor/gems/ruby/2.7.0
     #
     # After this point, gems have been replace in stage/code/vendor/gems with their
     # binary extensions: a good state. This method moves these gems to the Lambda
     # Layers structure and creates a symlinks to it.  First:
     #
-    #   from stage/code/vendor/gems/ruby/2.5.0
-    #   to stage/opt/ruby/gems/2.5.0
+    #   from stage/code/vendor/gems/ruby/2.7.0
+    #   to stage/opt/ruby/gems/2.7.0
     #
     # Then:
     #
