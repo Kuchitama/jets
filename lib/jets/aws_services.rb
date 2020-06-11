@@ -16,52 +16,62 @@ module Jets::AwsServices
   include StackStatus
 
   def apigateway
-    Aws::APIGateway::Client.new
+    Aws::APIGateway::Client.new(common_aws_options)
   end
   global_memoize :apigateway
 
   def cfn
-    Aws::CloudFormation::Client.new
+    Aws::CloudFormation::Client.new(common_aws_options)
   end
   global_memoize :cfn
 
   def dynamodb
-    Aws::DynamoDB::Client.new
+    Aws::DynamoDB::Client.new(common_aws_options)
   end
   global_memoize :dynamodb
 
   def aws_lambda
-    Aws::Lambda::Client.new
+    Aws::Lambda::Client.new(common_aws_options)
   end
   global_memoize :aws_lambda
 
   def logs
-    Aws::CloudWatchLogs::Client.new
+    Aws::CloudWatchLogs::Client.new(common_aws_options)
   end
   global_memoize :logs
 
   def s3
-    Aws::S3::Client.new
+    Aws::S3::Client.new(common_aws_options)
   end
   global_memoize :s3
 
   def s3_resource
-    Aws::S3::Resource.new
+    Aws::S3::Resource.new(common_aws_options)
   end
   global_memoize :s3_resource
 
   def sns
-    Aws::SNS::Client.new
+    Aws::SNS::Client.new(common_aws_options)
   end
   global_memoize :sns
 
   def sqs
-    Aws::SQS::Client.new
+    Aws::SQS::Client.new(common_aws_options)
   end
   global_memoize :sqs
 
   def sts
-    Aws::STS::Client.new
+    Aws::STS::Client.new(common_aws_options)
   end
   global_memoize :sts
+
+  private
+  def common_aws_options
+    opts = {}
+    opts = opts.merge(retry_limit: ENV['AWS_RETRY_LIMIT'].to_i) if ENV['AWS_RETRY_LIMIT'].present?
+    opts = opts.merge(retry_max_delay: ENV['AWS_RETRY_MAX_DELAY'].to_i) if ENV['AWS_RETRY_MAX_DELAY'].present?
+    opts = opts.merge(retry_limit: ENV['AWS_HTTP_READ_TIMEOUT'].to_i) if ENV['AWS_HTTP_READ_TIMEOUT'].present?
+
+    opts
+  end
 end
